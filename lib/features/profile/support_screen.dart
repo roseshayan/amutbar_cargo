@@ -80,14 +80,14 @@ class _SupportScreenState extends State<SupportScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'ثبت تیکت جدید',
+                  'ثبت پیام جدید',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: subjectCtrl,
                   decoration: const InputDecoration(
-                    hintText: 'موضوع تیکت (مثال: مشکل در احراز هویت)',
+                    hintText: 'موضوع پیام (مثال: مشکل در احراز هویت)',
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -122,13 +122,21 @@ class _SupportScreenState extends State<SupportScreen> {
                                 Navigator.pop(ctx);
                                 _fetchTickets();
                               }
-                            } catch (_) {
+                            } catch (e) {
                               setModalState(() => isSaving = false);
+                              if (ctx.mounted) {
+                                final message = e is ApiException
+                                    ? e.message
+                                    : 'ارسال پیام انجام نشد. دوباره تلاش کنید.';
+                                ScaffoldMessenger.of(ctx).showSnackBar(
+                                  SnackBar(content: Text(message)),
+                                );
+                              }
                             }
                           },
                     child: isSaving
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('ارسال تیکت'),
+                        : const Text('ارسال پیام'),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -149,7 +157,7 @@ class _SupportScreenState extends State<SupportScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        title: const Text('پشتیبانی و تیکت‌ها'),
+        title: const Text('پشتیبانی و پیام‌ها'),
         centerTitle: true,
       ),
       body: Column(
@@ -204,20 +212,20 @@ class _SupportScreenState extends State<SupportScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          // هدر تیکت‌ها
+          // هدر پیام‌ها
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'تیکت‌های من',
+                  'پیام‌های من',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 TextButton.icon(
                   onPressed: _showCreateTicketDialog,
                   icon: const Icon(Icons.add_rounded),
-                  label: const Text('ثبت تیکت'),
+                  label: const Text('ثبت پیام'),
                   style: TextButton.styleFrom(
                     foregroundColor: AppTheme.primary,
                   ),
@@ -225,7 +233,7 @@ class _SupportScreenState extends State<SupportScreen> {
               ],
             ),
           ),
-          // لیست تیکت‌ها
+          // لیست پیام‌ها
           Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -241,7 +249,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'تیکتی ثبت نکرده‌اید',
+                          'هنوز پیامی ثبت نکرده‌اید',
                           style: TextStyle(color: Colors.grey.shade500),
                         ),
                       ],

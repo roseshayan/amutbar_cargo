@@ -227,10 +227,43 @@ class ApiClient {
     String? message;
     if (data is Map) {
       final raw = data['message'] ?? data['error'];
-      if (raw != null && raw.toString().trim().isNotEmpty) {
+      if (raw is Map) {
+        final nested = raw['message'];
+        if (nested != null && nested.toString().trim().isNotEmpty) {
+          message = nested.toString().trim();
+        }
+      } else if (raw != null && raw.toString().trim().isNotEmpty) {
         message = raw.toString().trim();
       }
     }
+
+    // جزئیات PHP، SQL، HTML خطا و Stack trace هرگز به کاربر نمایش داده نشود.
+    final technicalMessage = (message ?? '').toLowerCase();
+    final exposesTechnicalDetails =
+        technicalMessage.contains('sqlstate') ||
+        technicalMessage.contains('integrity constraint') ||
+        technicalMessage.contains('foreign key constraint') ||
+        technicalMessage.contains('duplicate entry') ||
+        technicalMessage.contains('pdoexception') ||
+        technicalMessage.contains('fatal error') ||
+        technicalMessage.contains('uncaught exception') ||
+        technicalMessage.contains('syntax error') ||
+        technicalMessage.contains('warning:') ||
+        technicalMessage.contains('<br') ||
+        technicalMessage.contains('stack trace') ||
+        technicalMessage.contains('.php on line');
+
+    if (exposesTechnicalDetails) {
+      if (technicalMessage.contains('code_meli') ||
+          technicalMessage.contains('national_code') ||
+          technicalMessage.contains('national code')) {
+        message =
+            'این کد ملی قبلاً برای یک حساب فعال ثبت شده است. اگر حساب متعلق به شماست، به پشتیبانی پیام بدهید.';
+      } else {
+        message = 'خطایی در پردازش اطلاعات رخ داد. لطفاً دوباره تلاش کنید.';
+      }
+    }
+
     message ??= switch (error.type) {
       DioExceptionType.connectionTimeout ||
       DioExceptionType.sendTimeout ||

@@ -252,7 +252,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   _DashboardCard(
                     title: 'پشتیبانی',
-                    subtitle: 'ارسال تیکت',
+                    subtitle: 'ارسال پیام',
                     icon: Icons.headset_mic_rounded,
                     color: Colors.green,
                     onTap: () => context.push('/support'),

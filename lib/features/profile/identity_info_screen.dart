@@ -91,7 +91,7 @@ class _IdentityInfoScreenState extends State<IdentityInfoScreen> {
 
                   const SizedBox(height: 24),
 
-                  // جعبه راهنما برای ارسال تیکت
+                  // جعبه راهنما برای ارسال پیام
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -119,7 +119,7 @@ class _IdentityInfoScreenState extends State<IdentityInfoScreen> {
                         ),
                         const SizedBox(height: 8),
                         const Text(
-                          'به منظور حفظ امنیت حساب کاربری، تغییر اطلاعات هویتی امکان‌پذیر نیست. در صورت نیاز به ویرایش (مانند تغییر عکس یا اصلاح نام)، لطفاً از طریق بخش پشتیبانی به کارشناسان ما تیکت ارسال نمایید.',
+                          'به منظور حفظ امنیت حساب کاربری، تغییر اطلاعات هویتی امکان‌پذیر نیست. در صورت نیاز به ویرایش (مانند تغییر عکس یا اصلاح نام)، لطفاً از طریق بخش پشتیبانی برای کارشناسان ما پیام ارسال کنید.',
                           style: TextStyle(
                             fontSize: 12,
                             height: 1.5,
@@ -133,7 +133,7 @@ class _IdentityInfoScreenState extends State<IdentityInfoScreen> {
                           child: ElevatedButton.icon(
                             onPressed: () => context.push('/support'),
                             icon: const Icon(Icons.support_agent_rounded),
-                            label: const Text('ثبت تیکت پشتیبانی'),
+                            label: const Text('ارسال پیام به پشتیبانی'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
                               foregroundColor: Colors.white,

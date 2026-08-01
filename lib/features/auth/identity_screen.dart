@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/api_client.dart';
 import '../../core/constants.dart';
@@ -22,13 +21,18 @@ class _IdentityScreenState extends State<IdentityScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameCtrl = TextEditingController();
   final _nationalCodeCtrl = TextEditingController();
-  final _birthDateCtrl = TextEditingController();
+  final _birthYearCtrl = TextEditingController();
+  final _birthMonthCtrl = TextEditingController();
+  final _birthDayCtrl = TextEditingController();
   final _serialCtrl = TextEditingController();
   bool _isRejected = false;
   String _rejectReason = '';
 
   bool _isLoading = false;
-  String? _selectedDateServerFormat;
+
+  static final _localizedDigitsFormatter = FilteringTextInputFormatter.allow(
+    RegExp(r'[0-9۰-۹٠-٩]'),
+  );
 
   bool get _requireSerial {
     return AppInfoCache.requireNationalSerial;
@@ -48,6 +52,27 @@ class _IdentityScreenState extends State<IdentityScreen> {
     if (userJson != null) {
       try {
         final data = jsonDecode(userJson);
+        final user = data['user'];
+        if (user is Map) {
+          final fullName = user['full_name']?.toString().trim() ?? '';
+          if (fullName.isNotEmpty && fullName != 'کاربر') {
+            _nameCtrl.text = fullName;
+          }
+
+          final nationalCode = user['code_meli']?.toString().trim() ?? '';
+          if (nationalCode.isNotEmpty) {
+            _nationalCodeCtrl.text = nationalCode;
+          }
+
+          final birthDate = user['birth_date']?.toString().trim() ?? '';
+          final parts = birthDate.split('/');
+          if (parts.length == 3) {
+            _birthYearCtrl.text = parts[0];
+            _birthMonthCtrl.text = parts[1];
+            _birthDayCtrl.text = parts[2];
+          }
+        }
+
         final driver = data['company'];
         if (driver != null) {
           final int vs =
@@ -67,25 +92,50 @@ class _IdentityScreenState extends State<IdentityScreen> {
     }
   }
 
-  Future<void> _pickDate() async {
-    FocusScope.of(context).requestFocus(FocusNode());
-    Jalali? picked = await showPersianDatePicker(
-      context: context,
-      initialDate: Jalali(1370, 1, 1),
-      firstDate: Jalali(1300, 1, 1),
-      lastDate: Jalali.now(),
-      confirmText: 'تایید',
-      cancelText: 'انصراف',
-    );
-
-    if (picked != null) {
-      final formatted =
-          '${picked.year}/${picked.month.toString().padLeft(2, '0')}/${picked.day.toString().padLeft(2, '0')}';
-      setState(() {
-        _birthDateCtrl.text = formatted;
-        _selectedDateServerFormat = formatted;
-      });
+  String _toEnglishDigits(String value) {
+    const fa = '۰۱۲۳۴۵۶۷۸۹';
+    const ar = '٠١٢٣٤٥٦٧٨٩';
+    var normalized = value.trim();
+    for (var i = 0; i < 10; i++) {
+      normalized = normalized
+          .replaceAll(fa[i], '$i')
+          .replaceAll(ar[i], '$i');
     }
+    return normalized;
+  }
+
+  int get _currentJalaliYear {
+    final now = DateTime.now();
+    final beforeNowruz = now.month < 3 || (now.month == 3 && now.day < 21);
+    return now.year - (beforeNowruz ? 622 : 621);
+  }
+
+  String? _birthDateValidationError() {
+    final year = int.tryParse(_toEnglishDigits(_birthYearCtrl.text));
+    final month = int.tryParse(_toEnglishDigits(_birthMonthCtrl.text));
+    final day = int.tryParse(_toEnglishDigits(_birthDayCtrl.text));
+
+    if (year == null || month == null || day == null) {
+      return 'سال، ماه و روز تولد را کامل وارد کنید';
+    }
+    if (year < 1300 || year > _currentJalaliYear) {
+      return 'سال تولد معتبر نیست';
+    }
+    if (month < 1 || month > 12) {
+      return 'ماه تولد باید بین ۱ تا ۱۲ باشد';
+    }
+    final maxDay = month <= 6 ? 31 : 30;
+    if (day < 1 || day > maxDay) {
+      return 'روز تولد برای این ماه معتبر نیست';
+    }
+    return null;
+  }
+
+  String _birthDateForServer() {
+    final year = _toEnglishDigits(_birthYearCtrl.text);
+    final month = _toEnglishDigits(_birthMonthCtrl.text).padLeft(2, '0');
+    final day = _toEnglishDigits(_birthDayCtrl.text).padLeft(2, '0');
+    return '$year/$month/$day';
   }
 
   void _showSerialGuideDialog(BuildContext context) {
@@ -158,13 +208,21 @@ class _IdentityScreenState extends State<IdentityScreen> {
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
+    final birthDateError = _birthDateValidationError();
+    if (birthDateError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(birthDateError), backgroundColor: Colors.red),
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     try {
       Map<String, dynamic> requestData = {
         'full_name': _nameCtrl.text.trim(),
-        'national_code': _nationalCodeCtrl.text.trim(),
-        'birth_date': _selectedDateServerFormat,
+        'national_code': _toEnglishDigits(_nationalCodeCtrl.text),
+        'birth_date': _birthDateForServer(),
       };
 
       if (_requireSerial) {
@@ -220,6 +278,17 @@ class _IdentityScreenState extends State<IdentityScreen> {
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    _nationalCodeCtrl.dispose();
+    _birthYearCtrl.dispose();
+    _birthMonthCtrl.dispose();
+    _birthDayCtrl.dispose();
+    _serialCtrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -352,7 +421,7 @@ class _IdentityScreenState extends State<IdentityScreen> {
                         controller: _nationalCodeCtrl,
                         keyboardType: TextInputType.number,
                         inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
+                          _localizedDigitsFormatter,
                           LengthLimitingTextInputFormatter(10),
                         ],
                         decoration: const InputDecoration(
@@ -360,9 +429,11 @@ class _IdentityScreenState extends State<IdentityScreen> {
                           prefixIcon: Icon(Icons.credit_card_rounded),
                         ),
                         validator: (v) {
-                          if (v == null || v.isEmpty)
+                          final normalized = _toEnglishDigits(v ?? '');
+                          if (normalized.isEmpty)
                             return 'کد ملی الزامی است';
-                          if (v.length != 10) return 'کد ملی باید ۱۰ رقم باشد';
+                          if (normalized.length != 10)
+                            return 'کد ملی باید ۱۰ رقم باشد';
                           return null;
                         },
                       ),
@@ -374,20 +445,85 @@ class _IdentityScreenState extends State<IdentityScreen> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
-                      GestureDetector(
-                        onTap: _pickDate,
-                        child: AbsorbPointer(
-                          child: TextFormField(
-                            controller: _birthDateCtrl,
-                            decoration: const InputDecoration(
-                              hintText: 'انتخاب کنید',
-                              prefixIcon: Icon(Icons.calendar_month_rounded),
-                              suffixIcon: Icon(Icons.arrow_drop_down),
+                      const Text(
+                        'تاریخ را فقط با عدد وارد کنید؛ مثال: ۱۳۸۰ / ۱۰ / ۰۴',
+                        style: TextStyle(fontSize: 12, color: Colors.black54),
+                      ),
+                      const SizedBox(height: 10),
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: TextFormField(
+                                controller: _birthYearCtrl,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                textAlign: TextAlign.center,
+                                inputFormatters: [
+                                  _localizedDigitsFormatter,
+                                  LengthLimitingTextInputFormatter(4),
+                                ],
+                                decoration: const InputDecoration(
+                                  labelText: 'سال',
+                                  hintText: '۱۳۸۰',
+                                ),
+                                validator: (v) =>
+                                    _toEnglishDigits(v ?? '').isEmpty
+                                    ? 'سال را وارد کنید'
+                                    : null,
+                              ),
                             ),
-                            validator: (v) => (v?.isEmpty ?? true)
-                                ? 'تاریخ تولد الزامی است'
-                                : null,
-                          ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 6),
+                              child: Text('/', style: TextStyle(fontSize: 22)),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _birthMonthCtrl,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                textAlign: TextAlign.center,
+                                inputFormatters: [
+                                  _localizedDigitsFormatter,
+                                  LengthLimitingTextInputFormatter(2),
+                                ],
+                                decoration: const InputDecoration(
+                                  labelText: 'ماه',
+                                  hintText: '۱۰',
+                                ),
+                                validator: (v) =>
+                                    _toEnglishDigits(v ?? '').isEmpty
+                                    ? 'ماه را وارد کنید'
+                                    : null,
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 6),
+                              child: Text('/', style: TextStyle(fontSize: 22)),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _birthDayCtrl,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.done,
+                                textAlign: TextAlign.center,
+                                inputFormatters: [
+                                  _localizedDigitsFormatter,
+                                  LengthLimitingTextInputFormatter(2),
+                                ],
+                                decoration: const InputDecoration(
+                                  labelText: 'روز',
+                                  hintText: '۰۴',
+                                ),
+                                validator: (v) =>
+                                    _toEnglishDigits(v ?? '').isEmpty
+                                    ? 'روز را وارد کنید'
+                                    : null,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
 

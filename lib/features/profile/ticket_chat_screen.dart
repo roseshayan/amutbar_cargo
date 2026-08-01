@@ -128,7 +128,7 @@ class _TicketChatScreenState extends State<TicketChatScreen> {
     });
   }
 
-  // انتخاب تصویر از گالری برای پیوست تیکت
+  // انتخاب تصویر از گالری برای پیوست پیام
   Future<void> _pickAttachment() async {
     try {
       final XFile? picked = await ImagePicker().pickImage(
@@ -145,9 +145,9 @@ class _TicketChatScreenState extends State<TicketChatScreen> {
     } catch (e) {
       debugPrint('Error picking file: $e');
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('خطا در انتخاب فایل: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('انتخاب فایل انجام نشد. دوباره تلاش کنید.')),
+        );
       }
     }
   }
@@ -244,7 +244,7 @@ class _TicketChatScreenState extends State<TicketChatScreen> {
                     color: Colors.grey.shade300,
                     padding: const EdgeInsets.all(16),
                     child: const Text(
-                      'این تیکت بسته شده است.',
+                      'این گفتگو بسته شده است.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black54,
