@@ -44,3 +44,14 @@ flutter:
           weight: 400
         - asset: assets/fonts/Vazirmatn-FD-Bold.ttf
           weight: 700
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo_cargo.png"
+  min_sdk_android: 16 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/images/logo_cargo.png"
+    background_color: "#fff"
+    theme_color: "#00BFFE"
