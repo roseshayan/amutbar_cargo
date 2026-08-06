@@ -73,7 +73,7 @@ com.amutapp.cargo.amutbar_cargo
 ## Status
 
 Android: Supported
-iOS: Supported
+iOS: Planned / Not release-tested
 Web: Not officially supported
 
 ## License / Copyright

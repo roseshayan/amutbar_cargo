@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/theme.dart';
+import '../../core/app_logger.dart';
 
 /// صفحه‌ی «اعلام بار جدید» توسط باربری/صاحب بار.
 /// منطق فیلدها مطابق فرم اعلام بار پنل ادمین است.
@@ -74,7 +75,8 @@ class _CreateLoadScreenState extends State<CreateLoadScreen> {
             .map((e) => Map<String, dynamic>.from(e))
             .toList();
       }
-    } catch (_) {
+    } catch (e, st) {
+      AppLogger.error('Load vehicle types', e, st);
     } finally {
       if (mounted) setState(() => _loadingVehicles = false);
     }
@@ -84,9 +86,12 @@ class _CreateLoadScreenState extends State<CreateLoadScreen> {
 
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    if (_originCityId == null) return _toast('شهر مبدا را انتخاب کنید', Colors.red);
-    if (_destCityId == null) return _toast('شهر مقصد را انتخاب کنید', Colors.red);
-    if (_cargoTypeId == null) return _toast('نوع کالا را انتخاب کنید', Colors.red);
+    if (_originCityId == null)
+      return _toast('شهر مبدا را انتخاب کنید', Colors.red);
+    if (_destCityId == null)
+      return _toast('شهر مقصد را انتخاب کنید', Colors.red);
+    if (_cargoTypeId == null)
+      return _toast('نوع کالا را انتخاب کنید', Colors.red);
     if (_vehicleTypeId == null) {
       return _toast('نوع بارگیر را انتخاب کنید', Colors.red);
     }
@@ -513,7 +518,7 @@ class _ToggleChip extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: selected
-              ? AppTheme.primary.withOpacity(0.1)
+              ? AppTheme.primary.withValues(alpha: 0.1)
               : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
@@ -614,10 +619,7 @@ class _SearchSheetState extends State<_SearchSheet> {
       });
       return;
     }
-    _debounce = Timer(
-      const Duration(milliseconds: 350),
-      () => _search(query),
-    );
+    _debounce = Timer(const Duration(milliseconds: 350), () => _search(query));
   }
 
   Future<void> _search(String query) async {
@@ -634,7 +636,8 @@ class _SearchSheetState extends State<_SearchSheet> {
             .map((e) => Map<String, dynamic>.from(e))
             .toList();
       }
-    } catch (_) {
+    } catch (e, st) {
+      AppLogger.error('Load vehicle types', e, st);
     } finally {
       if (mounted && requestId == _requestSequence) {
         setState(() => _loading = false);

@@ -21,7 +21,13 @@ void handleNotificationRouting(BuildContext context) {
   final String? type = notif['type'];
   final Map<String, dynamic>? data = notif['data'];
 
-  ApiClient.getJson(AppConstants.notificationsEndpoint).catchError((_) {});
+  unawaited(
+    ApiClient.getJson(AppConstants.notificationsEndpoint).catchError((e, st) {
+      AppLogger.error('Fetch notifications', e, st);
+
+      return <String, dynamic>{};
+    }),
+  );
 
   if (type == 'ticket_reply' && data != null && data['ticket_id'] != null) {
     final ticketId = int.tryParse(data['ticket_id'].toString());
@@ -53,7 +59,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _checkUnreadNotifs();
     _notifTimer = Timer.periodic(
-      const Duration(seconds: 15),
+      const Duration(seconds: 60),
       (_) => _checkUnreadNotifs(),
     );
   }
@@ -91,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
         unreadNotificationsCount.value = newCount;
       }
     } catch (e, st) {
-      AppLogger.error('Fetch support tickets', e, st);
+      AppLogger.error('Error', e, st);
     }
   }
 
@@ -169,7 +175,7 @@ class _MainScreenState extends State<MainScreen> {
         selectedIndex: _currentIndex,
         onDestinationSelected: _changeTab,
         backgroundColor: Colors.white,
-        indicatorColor: AppTheme.primary.withOpacity(0.15),
+        indicatorColor: AppTheme.primary.withValues(alpha: 0.15),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         destinations: const [
           NavigationDestination(

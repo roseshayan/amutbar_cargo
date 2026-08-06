@@ -15,7 +15,7 @@ class AppTheme {
         seedColor: primary,
         primary: primary,
         secondary: secondary,
-        background: background,
+        surface: background,
       ),
       textTheme: base.textTheme.apply(
         fontFamily: 'Vazir',

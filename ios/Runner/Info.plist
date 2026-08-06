@@ -66,5 +66,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>برای ارسال تصویر در گفتگو با پشتیبانی، امکان انتخاب تصویر از گالری مورد نیاز است.</string>
 </dict>
 </plist>

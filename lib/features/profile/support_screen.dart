@@ -66,7 +66,7 @@ class _SupportScreenState extends State<SupportScreen> {
     try {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } catch (e, st) {
-      AppLogger.error('Fetch support tickets', e, st);
+      AppLogger.error('Error', e, st);
     }
   }
 
@@ -140,12 +140,12 @@ class _SupportScreenState extends State<SupportScreen> {
                             } catch (e, st) {
                               AppLogger.error('Send ticket message', e, st);
 
-                              if (mounted) {
+                              if (ctx.mounted) {
                                 final message = e is ApiException
                                     ? e.message
                                     : 'ارسال پیام انجام نشد. دوباره تلاش کنید.';
 
-                                ScaffoldMessenger.of(context).showSnackBar(
+                                ScaffoldMessenger.of(ctx).showSnackBar(
                                   SnackBar(content: Text(message)),
                                 );
                               }
@@ -402,9 +402,9 @@ class _ContactBox extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.2)),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Column(
           children: [

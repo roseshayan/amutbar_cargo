@@ -91,7 +91,7 @@ class _IdentityScreenState extends State<IdentityScreen> {
           }
         }
       } catch (e, st) {
-        AppLogger.error('Fetch support tickets', e, st);
+        AppLogger.error('Load cached identity', e, st);
       }
     }
   }
@@ -187,7 +187,7 @@ class _IdentityScreenState extends State<IdentityScreen> {
                       style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                     Image.asset(
-                      'assets/images/SerialCardMeliHelp.png',
+                      'assets/images/SerialCardMeliHelp.webp',
                       fit: BoxFit.cover,
                     ),
                   ],
@@ -620,7 +620,7 @@ class _StepHeader extends StatelessWidget {
           width: 42,
           height: 42,
           decoration: BoxDecoration(
-            color: AppTheme.secondary.withOpacity(0.12),
+            color: AppTheme.secondary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(14),
           ),
           child: const Icon(
@@ -661,7 +661,7 @@ class _NiceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),

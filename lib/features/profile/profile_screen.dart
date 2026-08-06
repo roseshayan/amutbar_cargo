@@ -57,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _company = data['company'];
         });
       } catch (e, st) {
-        AppLogger.error('Fetch support tickets', e, st);
+        AppLogger.error('Error', e, st);
       }
     }
   }
@@ -78,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       }
     } catch (e, st) {
-      AppLogger.error('Fetch support tickets', e, st);
+      AppLogger.error('Error', e, st);
     }
   }
 
@@ -140,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } catch (e, st) {
-      AppLogger.error('Fetch support tickets', e, st);
+      AppLogger.error('Error', e, st);
     }
   }
 
@@ -261,7 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 borderRadius: BorderRadius.circular(28),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.03),
+                    color: Colors.black.withValues(alpha: 0.03),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -279,13 +279,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: AppTheme.primary.withOpacity(0.2),
+                              color: AppTheme.primary.withValues(alpha: 0.2),
                               width: 3,
                             ),
                           ),
                           child: CircleAvatar(
                             radius: 38,
-                            backgroundColor: AppTheme.primary.withOpacity(0.1),
+                            backgroundColor: AppTheme.primary.withValues(
+                              alpha: 0.1,
+                            ),
                             backgroundImage: avatarUrl.isNotEmpty
                                 ? NetworkImage(avatarUrl)
                                 : null,
@@ -597,7 +599,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             decoration: BoxDecoration(
               color: isComingSoon
                   ? Colors.grey.shade100
-                  : iconColor.withOpacity(0.1),
+                  : iconColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: isComingSoon ? Colors.grey : iconColor),

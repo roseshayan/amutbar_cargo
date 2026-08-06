@@ -91,7 +91,7 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       final response = await ApiClient.getJson(AppConstants.appInfoEndpoint);
       AppInfoCache.setRaw(response);
-        } catch (e) {
+    } catch (e) {
       debugPrint('Error fetching terms: $e');
     }
 
@@ -141,7 +141,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 15,
                               offset: const Offset(0, 5),
                             ),
@@ -250,7 +250,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             style: TextStyle(
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onSurface.withOpacity(0.6),
+                              ).colorScheme.onSurface.withValues(alpha: 0.6),
                               fontSize: 12,
                             ),
                           ),
@@ -271,7 +271,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             style: TextStyle(
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onSurface.withOpacity(0.6),
+                              ).colorScheme.onSurface.withValues(alpha: 0.6),
                               fontSize: 12,
                             ),
                           ),

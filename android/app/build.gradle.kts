@@ -3,31 +3,41 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
+
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
-val signingKeys = listOf("keyAlias", "keyPassword", "storeFile", "storePassword")
+
+val signingKeys = listOf(
+    "keyAlias",
+    "keyPassword",
+    "storeFile",
+    "storePassword",
+)
+
 val signingReady = signingKeys.all {
     keystoreProperties[it]?.toString()?.isNotBlank() == true
 }
+
 val releaseRequested = gradle.startParameter.taskNames.any {
     it.contains("release", ignoreCase = true)
 }
+
 if (releaseRequested && !signingReady) {
     throw GradleException(
         "Release signing is not configured. Copy android/key.properties.example " +
-                "to android/key.properties and set a dedicated Cargo keystore."
+            "to android/key.properties and set a dedicated Cargo keystore."
     )
 }
 
 android {
     namespace = "com.amutapp.cargo.amutbar_cargo"
+
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -36,14 +46,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
     defaultConfig {
         applicationId = "com.amutapp.cargo.amutbar_cargo"
+
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
+
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -64,9 +72,16 @@ android {
             if (signingReady) {
                 signingConfig = signingConfigs.getByName("release")
             }
+
             isMinifyEnabled = false
             isShrinkResources = false
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 

@@ -59,7 +59,7 @@ class _TicketChatScreenState extends State<TicketChatScreen> {
         final data = jsonDecode(userJson);
         _myUserId = data['user']['id'];
       } catch (e, st) {
-        AppLogger.error('Fetch support tickets', e, st);
+        AppLogger.error('Error', e, st);
       }
     }
     await _fetchData();
@@ -271,7 +271,7 @@ class _TicketChatScreenState extends State<TicketChatScreen> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -412,7 +412,7 @@ class _TicketChatScreenState extends State<TicketChatScreen> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 5,
                     offset: const Offset(0, 2),
                   ),

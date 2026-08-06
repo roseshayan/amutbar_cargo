@@ -48,9 +48,7 @@ class MyLoadsScreenState extends State<MyLoadsScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('بستن بار'),
         content: const Text(
           'آیا این بار بسته شود؟ پس از بستن، دیگر به رانندگان نمایش داده نمی‌شود.',
@@ -90,9 +88,7 @@ class MyLoadsScreenState extends State<MyLoadsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              e is ApiException ? e.message : 'خطا در بستن بار',
-            ),
+            content: Text(e is ApiException ? e.message : 'خطا در بستن بار'),
             backgroundColor: Colors.red,
           ),
         );
@@ -106,16 +102,10 @@ class MyLoadsScreenState extends State<MyLoadsScreen> {
       appBar: AppBar(
         title: const Text('بارهای من'),
         actions: [
-          IconButton(
-            onPressed: fetch,
-            icon: const Icon(Icons.refresh_rounded),
-          ),
+          IconButton(onPressed: fetch, icon: const Icon(Icons.refresh_rounded)),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: fetch,
-        child: _buildBody(),
-      ),
+      body: RefreshIndicator(onRefresh: fetch, child: _buildBody()),
     );
   }
 
@@ -172,8 +162,7 @@ class _LoadCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusId =
-        int.tryParse(data['status_id']?.toString() ?? '0') ?? 0;
+    final statusId = int.tryParse(data['status_id']?.toString() ?? '0') ?? 0;
     final isActive = data['is_active'] == true;
     final color = _statusColor(statusId);
 
@@ -185,7 +174,7 @@ class _LoadCard extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -204,7 +193,7 @@ class _LoadCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.12),
+                    color: color.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -226,8 +215,11 @@ class _LoadCard extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.my_location_rounded,
-                    size: 18, color: AppTheme.primary),
+                const Icon(
+                  Icons.my_location_rounded,
+                  size: 18,
+                  color: AppTheme.primary,
+                ),
                 const SizedBox(width: 6),
                 Expanded(child: Text(data['origin']?.toString() ?? '')),
               ],
@@ -238,8 +230,11 @@ class _LoadCard extends StatelessWidget {
             ),
             Row(
               children: [
-                const Icon(Icons.location_on_rounded,
-                    size: 18, color: Colors.orange),
+                const Icon(
+                  Icons.location_on_rounded,
+                  size: 18,
+                  color: Colors.orange,
+                ),
                 const SizedBox(width: 6),
                 Expanded(child: Text(data['destination']?.toString() ?? '')),
               ],
@@ -287,10 +282,7 @@ class _LoadCard extends StatelessWidget {
       children: [
         Icon(icon, size: 16, color: Colors.grey.shade600),
         const SizedBox(width: 4),
-        Text(
-          text?.toString() ?? '-',
-          style: const TextStyle(fontSize: 13),
-        ),
+        Text(text?.toString() ?? '-', style: const TextStyle(fontSize: 13)),
       ],
     );
   }

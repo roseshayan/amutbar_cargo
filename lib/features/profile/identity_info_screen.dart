@@ -50,7 +50,7 @@ class _IdentityInfoScreenState extends State<IdentityInfoScreen> {
                   Center(
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundColor: AppTheme.primary.withOpacity(0.1),
+                      backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
                       backgroundImage: avatarUrl.isNotEmpty
                           ? NetworkImage(avatarUrl)
                           : null,
@@ -86,8 +86,6 @@ class _IdentityInfoScreenState extends State<IdentityInfoScreen> {
                     _user?['birth_date'] ?? '---',
                     Icons.calendar_month_rounded,
                   ),
-
-
 
                   const SizedBox(height: 24),
 

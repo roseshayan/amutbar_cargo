@@ -143,7 +143,7 @@ class _OtpScreenState extends State<OtpScreen> {
             isIdentityVerified = (vs == 1 || vs == '1');
           }
         } catch (e, st) {
-          AppLogger.error('Fetch support tickets', e, st);
+          AppLogger.error('Error', e, st);
         }
 
         if (!mounted) return;

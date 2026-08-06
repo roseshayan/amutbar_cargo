@@ -48,7 +48,7 @@ class ApiClient {
                   }
                 }
               } catch (e, st) {
-                AppLogger.error('Fetch support tickets', e, st);
+                AppLogger.error('Attach auth token', e, st);
               }
               handler.next(options);
             },

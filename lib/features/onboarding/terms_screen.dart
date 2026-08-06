@@ -29,7 +29,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.1),
+              color: theme.colorScheme.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -52,7 +52,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, -5),
                   ),
@@ -74,7 +74,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontSize: 14.5,
                       height: 1.8, // فاصله استاندارد خطوط برای خوانایی بهتر
-                      color: theme.colorScheme.onSurface.withOpacity(0.8),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                     ),
                     textAlign: TextAlign.justify,
                     textDirection: TextDirection.rtl,

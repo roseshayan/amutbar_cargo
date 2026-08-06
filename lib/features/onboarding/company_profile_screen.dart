@@ -100,7 +100,7 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
       }
       if (mounted) setState(() {});
     } catch (e, st) {
-      AppLogger.error('Fetch support tickets', e, st);
+      AppLogger.error('Error', e, st);
     }
   }
 
@@ -113,7 +113,8 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
             .map((e) => Map<String, dynamic>.from(e))
             .toList();
       }
-    } catch (_) {
+    } catch (e, st) {
+      AppLogger.error('Load vehicle types', e, st);
     } finally {
       if (mounted) setState(() => _loadingProvinces = false);
     }
@@ -509,7 +510,7 @@ class _EntityChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
           color: selected
-              ? AppTheme.primary.withOpacity(0.1)
+              ? AppTheme.primary.withValues(alpha: 0.1)
               : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
@@ -557,7 +558,7 @@ class _ProfileHeader extends StatelessWidget {
           width: 42,
           height: 42,
           decoration: BoxDecoration(
-            color: AppTheme.secondary.withOpacity(0.12),
+            color: AppTheme.secondary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(14),
           ),
           child: const Icon(Icons.badge_outlined, color: AppTheme.secondary),
@@ -594,7 +595,7 @@ class _NiceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),

@@ -260,7 +260,7 @@ class _SplashScreenState extends State<SplashScreen>
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 25,
                               offset: const Offset(0, 10),
                             ),
@@ -283,7 +283,7 @@ class _SplashScreenState extends State<SplashScreen>
                       Text(
                         'سامانه اعلام بار',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                           fontSize: 14,
                           fontFamily: 'Vazir',
                         ),
@@ -379,7 +379,7 @@ class _SplashScreenState extends State<SplashScreen>
                         // نمایش نسخه خوانده شده از pubspec
                         'نسخه $_appVersionLabel',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.4),
+                          color: Colors.white.withValues(alpha: 0.4),
                           fontSize: 12,
                           fontFamily: 'Vazir',
                         ),
@@ -428,7 +428,6 @@ class _SplashScreenState extends State<SplashScreen>
             }
           }
         }
-
       } catch (e) {
         // اگر سرور ارور داد (یعنی کاربر از پنل ادمین پاک شده یا توکن باطل شده)
         // تمام کش و توکن‌های مربوط به کاربر حذف‌شده رو پاک می‌کنیم (رفع اروری که داشتی)
