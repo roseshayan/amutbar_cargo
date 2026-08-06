@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'constants.dart';
 import 'storage.dart';
+import '../../core/app_logger.dart';
 
 class ApiException implements Exception {
   const ApiException(this.message, {this.statusCode});
@@ -47,7 +47,9 @@ class ApiClient {
                     options.headers['Authorization'] = 'Bearer $token';
                   }
                 }
-              } catch (_) {}
+              } catch (e, st) {
+                AppLogger.error('Fetch support tickets', e, st);
+              }
               handler.next(options);
             },
             onResponse: (response, handler) {
@@ -191,24 +193,6 @@ class ApiClient {
       fileFieldName: await MultipartFile.fromFile(filePath),
     });
 
-    try {
-      final r = await dio.post(path, data: form);
-      return _asJsonMap(r.data);
-    } on DioException catch (e) {
-      throw _asApiException(e);
-    }
-  }
-
-  static Future<Map<String, dynamic>> postMultipartFiles(
-    String path, {
-    required Map<String, File> files,
-    Map<String, dynamic>? fields,
-  }) async {
-    final map = <String, dynamic>{...(fields ?? <String, dynamic>{})};
-    for (final e in files.entries) {
-      map[e.key] = await MultipartFile.fromFile(e.value.path);
-    }
-    final form = FormData.fromMap(map);
     try {
       final r = await dio.post(path, data: form);
       return _asJsonMap(r.data);

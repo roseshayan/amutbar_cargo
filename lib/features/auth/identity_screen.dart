@@ -9,6 +9,8 @@ import '../../core/constants.dart';
 import '../../core/storage.dart';
 import '../../core/theme.dart';
 import '../../core/app_info.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+import '../../core/app_logger.dart';
 
 class IdentityScreen extends StatefulWidget {
   const IdentityScreen({super.key});
@@ -88,7 +90,9 @@ class _IdentityScreenState extends State<IdentityScreen> {
             });
           }
         }
-      } catch (_) {}
+      } catch (e, st) {
+        AppLogger.error('Fetch support tickets', e, st);
+      }
     }
   }
 
@@ -97,17 +101,9 @@ class _IdentityScreenState extends State<IdentityScreen> {
     const ar = '٠١٢٣٤٥٦٧٨٩';
     var normalized = value.trim();
     for (var i = 0; i < 10; i++) {
-      normalized = normalized
-          .replaceAll(fa[i], '$i')
-          .replaceAll(ar[i], '$i');
+      normalized = normalized.replaceAll(fa[i], '$i').replaceAll(ar[i], '$i');
     }
     return normalized;
-  }
-
-  int get _currentJalaliYear {
-    final now = DateTime.now();
-    final beforeNowruz = now.month < 3 || (now.month == 3 && now.day < 21);
-    return now.year - (beforeNowruz ? 622 : 621);
   }
 
   String? _birthDateValidationError() {
@@ -118,16 +114,29 @@ class _IdentityScreenState extends State<IdentityScreen> {
     if (year == null || month == null || day == null) {
       return 'سال، ماه و روز تولد را کامل وارد کنید';
     }
-    if (year < 1300 || year > _currentJalaliYear) {
+
+    final now = Jalali.now();
+
+    if (year < 1300 || year > now.year) {
       return 'سال تولد معتبر نیست';
     }
+
     if (month < 1 || month > 12) {
       return 'ماه تولد باید بین ۱ تا ۱۲ باشد';
     }
-    final maxDay = month <= 6 ? 31 : 30;
+
+    final maxDay = Jalali(year, month, 1).monthLength;
+
     if (day < 1 || day > maxDay) {
       return 'روز تولد برای این ماه معتبر نیست';
     }
+
+    final birthDate = Jalali(year, month, day);
+
+    if (birthDate.julianDayNumber > now.julianDayNumber) {
+      return 'تاریخ تولد نمی‌تواند مربوط به آینده باشد';
+    }
+
     return null;
   }
 
@@ -430,8 +439,7 @@ class _IdentityScreenState extends State<IdentityScreen> {
                         ),
                         validator: (v) {
                           final normalized = _toEnglishDigits(v ?? '');
-                          if (normalized.isEmpty)
-                            return 'کد ملی الزامی است';
+                          if (normalized.isEmpty) return 'کد ملی الزامی است';
                           if (normalized.length != 10)
                             return 'کد ملی باید ۱۰ رقم باشد';
                           return null;

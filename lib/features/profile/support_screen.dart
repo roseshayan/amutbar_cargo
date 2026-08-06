@@ -6,6 +6,7 @@ import '../../core/api_client.dart';
 import '../../core/app_info.dart';
 import '../../core/constants.dart';
 import '../../core/theme.dart';
+import '../../core/app_logger.dart';
 
 class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key});
@@ -33,7 +34,19 @@ class _SupportScreenState extends State<SupportScreen> {
           _tickets = res['items'] ?? [];
         });
       }
-    } catch (_) {}
+    } catch (e, st) {
+      AppLogger.error('Fetch support tickets', e, st);
+
+      if (mounted) {
+        final message = e is ApiException
+            ? e.message
+            : 'دریافت پیام‌های پشتیبانی انجام نشد.';
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
+      }
+    }
     if (mounted) setState(() => _isLoading = false);
   }
 
@@ -52,7 +65,9 @@ class _SupportScreenState extends State<SupportScreen> {
     if (url.isEmpty) return;
     try {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } catch (_) {}
+    } catch (e, st) {
+      AppLogger.error('Fetch support tickets', e, st);
+    }
   }
 
   void _showCreateTicketDialog() {
@@ -122,13 +137,15 @@ class _SupportScreenState extends State<SupportScreen> {
                                 Navigator.pop(ctx);
                                 _fetchTickets();
                               }
-                            } catch (e) {
-                              setModalState(() => isSaving = false);
-                              if (ctx.mounted) {
+                            } catch (e, st) {
+                              AppLogger.error('Send ticket message', e, st);
+
+                              if (mounted) {
                                 final message = e is ApiException
                                     ? e.message
                                     : 'ارسال پیام انجام نشد. دوباره تلاش کنید.';
-                                ScaffoldMessenger.of(ctx).showSnackBar(
+
+                                ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text(message)),
                                 );
                               }

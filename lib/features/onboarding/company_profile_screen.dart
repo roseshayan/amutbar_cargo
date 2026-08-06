@@ -8,6 +8,7 @@ import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/storage.dart';
 import '../../core/theme.dart';
+import '../../core/app_logger.dart';
 
 /// فرم اختیاری ویرایش مشخصات «صاحب بار / باربری» از بخش پروفایل.
 class CompanyProfileScreen extends StatefulWidget {
@@ -74,10 +75,8 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
           _entityType =
               int.tryParse(company['entity_type'].toString()) ?? _entityType;
         }
-        _registrationNoCtrl.text =
-            company['registration_no']?.toString() ?? '';
-        _economicCodeCtrl.text =
-            company['economic_code']?.toString() ?? '';
+        _registrationNoCtrl.text = company['registration_no']?.toString() ?? '';
+        _economicCodeCtrl.text = company['economic_code']?.toString() ?? '';
         _addressCtrl.text = company['address']?.toString() ?? '';
         _postalCodeCtrl.text = company['postal_code']?.toString() ?? '';
 
@@ -100,7 +99,9 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
         _nameCtrl.text = user['full_name'].toString();
       }
       if (mounted) setState(() {});
-    } catch (_) {}
+    } catch (e, st) {
+      AppLogger.error('Fetch support tickets', e, st);
+    }
   }
 
   Future<void> _loadProvinces() async {
@@ -284,8 +285,9 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
                                 : Icons.person_outline_rounded,
                           ),
                         ),
-                        validator: (v) =>
-                            (v?.trim().isEmpty ?? true) ? 'این فیلد الزامی است' : null,
+                        validator: (v) => (v?.trim().isEmpty ?? true)
+                            ? 'این فیلد الزامی است'
+                            : null,
                       ),
 
                       if (isLegal) ...[
@@ -403,8 +405,7 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
                                     ),
                                   )
                                   .toList(),
-                              onChanged: (val) =>
-                                  setState(() => _cityId = val),
+                              onChanged: (val) => setState(() => _cityId = val),
                             ),
                       const SizedBox(height: 20),
 
@@ -440,7 +441,8 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
                         ),
                         validator: (value) {
                           final postalCode = value?.trim() ?? '';
-                          if (postalCode.isNotEmpty && postalCode.length != 10) {
+                          if (postalCode.isNotEmpty &&
+                              postalCode.length != 10) {
                             return 'کد پستی باید ۱۰ رقم باشد';
                           }
                           return null;

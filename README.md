@@ -1,17 +1,81 @@
-# amutbar_cargo
+# AmutBar Cargo
 
-AmutBar Cargo app for cargo owners and freight companies to announce loads (اعلام بار).
+معرفی پروژه
 
-## Getting Started
+## Features
+- OTP Login
+- Identity Verification
+- Cargo Owner Profile
+- Create Load
+- Search City
+- Search Cargo Type
+- Vehicle Types
+- My Loads
+- Close Load
+- Support Tickets
+- Banner System
+- Notifications
+- App Update Check
 
-This project is a starting point for a Flutter application.
+## Tech Stack
+- Flutter
+- Dart
+- Dio
+- GoRouter
+- Secure Storage
 
-A few resources to get you started if this is your first Flutter project:
+## Project Structure
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+lib/
+  core/
+  features/
+    auth/
+    dashboard/
+    loads/
+    onboarding/
+    profile/
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## API Configuration
+
+API_BASE_URL
+
+## Development
+
+flutter pub get
+flutter analyze
+flutter test
+
+## Run
+flutter run \
+  --dart-define=API_BASE_URL=https://amutapp.com/amutadmin
+
+flutter run
+
+## Production Build
+
+flutter build apk --release
+flutter build appbundle --release
+
+## Release Signing
+flutter build appbundle --release \
+  --dart-define=API_BASE_URL=https://amutapp.com/amutadmin
+  
+توضیح key.properties
+
+## API / Backend
+
+توضیح ارتباط با amutapp.com
+
+## Android Package
+
+com.amutapp.cargo.amutbar_cargo
+
+## Status
+
+Android: Supported
+iOS: Supported
+Web: Not officially supported
+
+## License / Copyright
+
+## 

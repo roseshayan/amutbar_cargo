@@ -8,6 +8,7 @@ import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/theme.dart';
 import '../../core/storage.dart';
+import '../../core/app_logger.dart';
 
 class TicketChatScreen extends StatefulWidget {
   final int ticketId;
@@ -57,7 +58,9 @@ class _TicketChatScreenState extends State<TicketChatScreen> {
       try {
         final data = jsonDecode(userJson);
         _myUserId = data['user']['id'];
-      } catch (_) {}
+      } catch (e, st) {
+        AppLogger.error('Fetch support tickets', e, st);
+      }
     }
     await _fetchData();
     _pollTimer = Timer.periodic(const Duration(seconds: 10), (_) {
@@ -146,7 +149,9 @@ class _TicketChatScreenState extends State<TicketChatScreen> {
       debugPrint('Error picking file: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('انتخاب فایل انجام نشد. دوباره تلاش کنید.')),
+          const SnackBar(
+            content: Text('انتخاب فایل انجام نشد. دوباره تلاش کنید.'),
+          ),
         );
       }
     }

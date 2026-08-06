@@ -6,6 +6,7 @@ import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/theme.dart';
 import 'main_screen.dart';
+import '../../core/app_logger.dart';
 
 class DashboardScreen extends StatefulWidget {
   // این کالبک برای تغییر تب اضافه شده است
@@ -87,7 +88,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final uri = Uri.parse(url.trim());
     try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } catch (_) {}
+    } catch (e, st) {
+      AppLogger.error('Fetch support tickets', e, st);
+    }
   }
 
   @override

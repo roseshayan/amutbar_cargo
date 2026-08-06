@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../core/app_logger.dart';
 
 import '../../core/api_client.dart';
 import '../../core/app_info.dart';
@@ -55,7 +56,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _user = data['user'];
           _company = data['company'];
         });
-      } catch (_) {}
+      } catch (e, st) {
+        AppLogger.error('Fetch support tickets', e, st);
+      }
     }
   }
 
@@ -74,7 +77,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           });
         }
       }
-    } catch (_) {}
+    } catch (e, st) {
+      AppLogger.error('Fetch support tickets', e, st);
+    }
   }
 
   Future<void> _getAppVersion() async {
@@ -134,7 +139,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final uri = Uri.parse(url.trim());
     try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } catch (_) {}
+    } catch (e, st) {
+      AppLogger.error('Fetch support tickets', e, st);
+    }
   }
 
   Future<void> _logout() async {
@@ -161,9 +168,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (confirm == true) {
       try {
         await ApiClient.postJson(AppConstants.logoutEndpoint, {});
-      } catch (_) {}
+      } catch (e, st) {
+        AppLogger.error('Remote logout failed', e, st);
+      }
+
       await AppStorage.clearAll();
-      if (mounted) context.go('/auth');
+
+      if (mounted) {
+        context.go('/auth');
+      }
     }
   }
 
@@ -503,8 +516,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildMenuItem(
                     icon: Icons.business_outlined,
                     title: 'اطلاعات باربری',
-                    subtitle:
-                        'تکمیل یا ویرایش مشخصات اختیاری صاحب بار / شرکت',
+                    subtitle: 'تکمیل یا ویرایش مشخصات اختیاری صاحب بار / شرکت',
                     onTap: () {
                       context.push('/company-profile');
                     },

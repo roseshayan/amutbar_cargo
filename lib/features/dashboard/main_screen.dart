@@ -8,6 +8,7 @@ import 'dashboard_screen.dart';
 import '../profile/profile_screen.dart';
 import '../loads/create_load_screen.dart';
 import '../loads/my_loads_screen.dart';
+import '../../core/app_logger.dart';
 
 final ValueNotifier<int> unreadNotificationsCount = ValueNotifier<int>(0);
 final ValueNotifier<Map<String, dynamic>?> latestNotificationRoute =
@@ -89,7 +90,9 @@ class _MainScreenState extends State<MainScreen> {
         }
         unreadNotificationsCount.value = newCount;
       }
-    } catch (_) {}
+    } catch (e, st) {
+      AppLogger.error('Fetch support tickets', e, st);
+    }
   }
 
   void _showInAppNotificationAlert() {
@@ -112,8 +115,11 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.close_rounded,
-                  color: Colors.white70, size: 20),
+              icon: const Icon(
+                Icons.close_rounded,
+                color: Colors.white70,
+                size: 20,
+              ),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
               onPressed: () =>
@@ -178,8 +184,10 @@ class _MainScreenState extends State<MainScreen> {
           ),
           NavigationDestination(
             icon: Icon(Icons.local_shipping_outlined),
-            selectedIcon:
-                Icon(Icons.local_shipping_rounded, color: AppTheme.primary),
+            selectedIcon: Icon(
+              Icons.local_shipping_rounded,
+              color: AppTheme.primary,
+            ),
             label: 'بارهای من',
           ),
           NavigationDestination(

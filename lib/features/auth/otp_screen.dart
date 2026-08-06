@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +9,7 @@ import '../../core/api_client.dart';
 import '../../core/constants.dart';
 import '../../core/storage.dart';
 import '../../core/theme.dart';
+import '../../core/app_logger.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phone;
@@ -59,33 +59,38 @@ class _OtpScreenState extends State<OtpScreen> {
   // متد کمکی برای دریافت اطلاعات دستگاه
   Future<Map<String, String>> _getDeviceInfo() async {
     final deviceInfo = DeviceInfoPlugin();
+
     String platformName = 'unknown';
     String deviceId = '';
 
     try {
       if (kIsWeb) {
         platformName = 'web';
+
         final webInfo = await deviceInfo.webBrowserInfo;
+
         final rawDeviceId = [
           webInfo.browserName.name,
           webInfo.platform ?? '',
           webInfo.vendor ?? '',
         ].where((part) => part.isNotEmpty).join('|');
+
         deviceId = rawDeviceId.length > 64
             ? rawDeviceId.substring(0, 64)
             : rawDeviceId;
-      } else if (Platform.isAndroid) {
+      } else if (defaultTargetPlatform == TargetPlatform.android) {
         platformName = 'android';
+
         final androidInfo = await deviceInfo.androidInfo;
-        // استفاده از id به عنوان شناسه یکتا در اندروید
         deviceId = androidInfo.id;
-      } else if (Platform.isIOS) {
+      } else if (defaultTargetPlatform == TargetPlatform.iOS) {
         platformName = 'ios';
+
         final iosInfo = await deviceInfo.iosInfo;
         deviceId = iosInfo.identifierForVendor ?? '';
       }
-    } catch (e) {
-      debugPrint('Error getting device info: $e');
+    } catch (e, st) {
+      AppLogger.error('Get device info', e, st);
     }
 
     return {'platform': platformName, 'device_id': deviceId};
@@ -137,7 +142,9 @@ class _OtpScreenState extends State<OtpScreen> {
             final vs = company['verification_status'];
             isIdentityVerified = (vs == 1 || vs == '1');
           }
-        } catch (_) {}
+        } catch (e, st) {
+          AppLogger.error('Fetch support tickets', e, st);
+        }
 
         if (!mounted) return;
 
@@ -149,9 +156,7 @@ class _OtpScreenState extends State<OtpScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               e is ApiException ? e.message : 'کد وارد شده صحیح نیست',
