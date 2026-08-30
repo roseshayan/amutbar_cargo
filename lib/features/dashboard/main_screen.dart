@@ -23,8 +23,6 @@ void handleNotificationRouting(BuildContext context) {
 
   unawaited(
     ApiClient.getJson(AppConstants.notificationsEndpoint).catchError((e, st) {
-      AppLogger.error('Fetch notifications', e, st);
-
       return <String, dynamic>{};
     }),
   );

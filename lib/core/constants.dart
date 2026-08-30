@@ -31,6 +31,7 @@ class AppConstants {
 
   // سایر
   static const String bannersEndpoint = '/api/v1/banners';
+  static const String faqsEndpoint = '/api/v1/faqs?target_app_id=2';
   static const String ticketsEndpoint = '/api/v1/support/tickets';
   static const String unreadNotifsCountEndpoint =
       '/api/v1/me/notifications/unread-count';

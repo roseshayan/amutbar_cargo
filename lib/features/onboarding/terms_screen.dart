@@ -1,14 +1,57 @@
 import 'package:flutter/material.dart';
 
 class TermsAndConditionsScreen extends StatelessWidget {
-  final String termsText; // متنی که از API دریافت کردی رو پاس بده اینجا
+  final String termsText;
 
-  const TermsAndConditionsScreen({Key? key, required this.termsText})
-    : super(key: key);
+  const TermsAndConditionsScreen({super.key, required this.termsText});
+
+  List<_TermsSection> _parseSections() {
+    final normalized = termsText.trim().replaceAll('\r\n', '\n').replaceAll('\r', '\n');
+    if (normalized.isEmpty) {
+      return const [
+        _TermsSection(
+          title: 'قوانین و مقررات',
+          body: 'در حال حاضر قانونی از سمت سرور دریافت نشد.',
+        ),
+      ];
+    }
+
+    final sections = <_TermsSection>[];
+    String title = '';
+    final body = <String>[];
+
+    void flush() {
+      final text = body.join('\n').trim();
+      if (title.isNotEmpty || text.isNotEmpty) {
+        sections.add(
+          _TermsSection(
+            title: title.isNotEmpty ? title : 'قوانین و مقررات',
+            body: text,
+          ),
+        );
+      }
+      body.clear();
+    }
+
+    for (final line in normalized.split('\n')) {
+      final trimmed = line.trimLeft();
+      if (trimmed.startsWith('## ')) {
+        if (title.isNotEmpty || body.isNotEmpty) flush();
+        title = trimmed.substring(3).trim();
+      } else {
+        body.add(line);
+      }
+    }
+    flush();
+    return sections.isEmpty
+        ? [_TermsSection(title: 'قوانین و مقررات', body: normalized)]
+        : sections;
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final sections = _parseSections();
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -22,95 +65,152 @@ class TermsAndConditionsScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          // بخش هدر و آیکون
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.gavel_rounded,
-              // آیکون چکش قانون (میتونی به policy یا menu_book تغییرش بدی)
-              size: 48,
-              color: theme.colorScheme.primary,
-            ),
-          ),
-          const SizedBox(height: 32),
-
-          // بخش باکس متن قوانین
-          Expanded(
-            child: Container(
-              width: double.infinity,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            const SizedBox(height: 8),
+            Container(
+              width: 72,
+              height: 72,
               decoration: BoxDecoration(
-                color: theme.cardColor,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(32),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, -5),
-                  ),
-                ],
+                color: theme.colorScheme.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(22),
               ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(32),
+              child: Icon(
+                Icons.gavel_rounded,
+                size: 36,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 14),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28),
+              child: Text(
+                'استفاده از خدمات به منزله مطالعه و پذیرش مقررات جاری سامانه است.',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  height: 1.7,
+                  color: theme.colorScheme.onSurface.withOpacity(.62),
                 ),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  // افکت اسکرول نرم (مثل iOS)
-                  padding: const EdgeInsets.fromLTRB(24, 32, 24, 100),
-                  // پدینگ پایین برای دکمه
-                  child: Text(
-                    termsText.trim().isNotEmpty
-                        ? termsText
-                        : 'در حال حاضر قانونی از سمت سرور دریافت نشد.',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontSize: 14.5,
-                      height: 1.8, // فاصله استاندارد خطوط برای خوانایی بهتر
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+              ),
+            ),
+            const SizedBox(height: 18),
+            Expanded(
+              child: ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.fromLTRB(
+                  16,
+                  0,
+                  16,
+                  105 + MediaQuery.of(context).padding.bottom,
+                ),
+                itemCount: sections.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  final section = sections[index];
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: theme.cardColor,
+                      borderRadius: BorderRadius.circular(17),
+                      border: Border.all(
+                        color: theme.dividerColor.withOpacity(.11),
+                      ),
                     ),
-                    textAlign: TextAlign.justify,
-                    textDirection: TextDirection.rtl,
-                  ),
-                ),
+                    child: Theme(
+                      data: theme.copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                        initiallyExpanded: index == 0,
+                        tilePadding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 3,
+                        ),
+                        childrenPadding: const EdgeInsets.fromLTRB(
+                          17,
+                          0,
+                          17,
+                          18,
+                        ),
+                        leading: Container(
+                          width: 36,
+                          height: 36,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary.withOpacity(.09),
+                            borderRadius: BorderRadius.circular(11),
+                          ),
+                          child: Text(
+                            '${index + 1}',
+                            style: TextStyle(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        title: Text(
+                          section.title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.5,
+                            height: 1.6,
+                          ),
+                        ),
+                        children: [
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: SelectableText(
+                              section.body,
+                              textAlign: TextAlign.justify,
+                              textDirection: TextDirection.rtl,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontSize: 13.5,
+                                height: 1.95,
+                                color: theme.colorScheme.onSurface.withOpacity(.76),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-
-      // دکمه تایید پایین صفحه
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: ElevatedButton(
-          onPressed: () {
-            // برگشت به صفحه قبل
-            Navigator.of(context).pop();
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: theme.colorScheme.primary,
-            foregroundColor: theme.colorScheme.onPrimary,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+      floatingActionButton: SafeArea(
+        top: false,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              elevation: 2,
             ),
-            elevation: 2,
-          ),
-          child: const Text(
-            'متوجه شدم',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            child: const Text(
+              'متوجه شدم',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       ),
     );
   }
+}
+
+class _TermsSection {
+  const _TermsSection({required this.title, required this.body});
+
+  final String title;
+  final String body;
 }
