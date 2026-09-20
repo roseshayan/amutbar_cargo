@@ -186,7 +186,9 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
       if (Navigator.of(context).canPop()) {
         context.pop();
       } else {
-        context.go('/dashboard');
+        final me = await ApiClient.getJson(AppConstants.meEndpoint);
+        if (!mounted) return;
+        context.go(me['onboarding']?['needs_verification_video'] == true ? '/video-verify' : '/dashboard');
       }
     } catch (e) {
       if (!mounted) return;

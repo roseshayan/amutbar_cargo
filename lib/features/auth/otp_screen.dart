@@ -150,6 +150,8 @@ class _OtpScreenState extends State<OtpScreen> {
 
         if (!isIdentityVerified) {
           context.go('/identity');
+        } else if (res['profile']?['onboarding']?['needs_verification_video'] == true) {
+          context.go('/video-verify');
         } else {
           context.go('/dashboard');
         }

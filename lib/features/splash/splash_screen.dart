@@ -423,6 +423,8 @@ class _SplashScreenState extends State<SplashScreen>
             if (vStatus != 1) {
               // فقط احراز هویت برای پایان ثبت‌نام الزامی است.
               context.go('/identity');
+            } else if (meResponse['onboarding']?['needs_verification_video'] == true) {
+              context.go('/video-verify');
             } else {
               context.go('/dashboard');
             }

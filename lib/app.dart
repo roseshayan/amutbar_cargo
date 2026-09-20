@@ -8,6 +8,7 @@ import 'features/auth/auth_screen.dart';
 import 'features/auth/otp_screen.dart';
 import 'features/auth/identity_screen.dart';
 import 'features/onboarding/company_profile_screen.dart';
+import 'features/onboarding/video_verification_screen.dart';
 import 'features/dashboard/main_screen.dart';
 import 'features/loads/create_load_screen.dart';
 import 'features/profile/support_screen.dart';
@@ -38,6 +39,7 @@ class AmutBarCargoApp extends StatelessWidget {
           path: '/company-profile',
           builder: (_, __) => const CompanyProfileScreen(),
         ),
+        GoRoute(path: '/video-verify', builder: (_, __) => const VideoVerificationScreen()),
         GoRoute(path: '/dashboard', builder: (_, __) => const MainScreen()),
         GoRoute(
           path: '/create-load',

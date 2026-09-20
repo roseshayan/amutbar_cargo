@@ -1,4 +1,5 @@
 class AppConstants {
+  static const String verificationVideoEndpoint = '/api/v1/company/verification-video';
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
     defaultValue: 'https://amutapp.com/amutadmin',
@@ -31,6 +32,7 @@ class AppConstants {
 
   // سایر
   static const String bannersEndpoint = '/api/v1/banners';
+  static const String faqsEndpoint = '/api/v1/faqs?target_app_id=2';
   static const String ticketsEndpoint = '/api/v1/support/tickets';
   static const String unreadNotifsCountEndpoint =
       '/api/v1/me/notifications/unread-count';
