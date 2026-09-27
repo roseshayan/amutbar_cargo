@@ -209,10 +209,12 @@ class _AuthScreenState extends State<AuthScreen> {
                               : null,
                         ),
                         validator: (value) {
-                          if (value == null || value.isEmpty)
+                          if (value == null || value.isEmpty) {
                             return 'شماره موبایل الزامی است';
-                          if (value.length < 11 || !value.startsWith('09'))
+                          }
+                          if (value.length < 11 || !value.startsWith('09')) {
                             return 'شماره موبایل نامعتبر است';
+                          }
                           return null;
                         },
                       ),

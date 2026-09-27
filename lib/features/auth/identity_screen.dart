@@ -363,8 +363,9 @@ class _IdentityScreenState extends State<IdentityScreen> {
                           child: ElevatedButton.icon(
                             onPressed: () {
                               final phone = AppInfoCache.supportPhone;
-                              if (phone.isNotEmpty)
+                              if (phone.isNotEmpty) {
                                 launchUrl(Uri.parse('tel:$phone'));
+                              }
                             },
                             icon: const Icon(
                               Icons.support_agent_rounded,
@@ -446,8 +447,9 @@ class _IdentityScreenState extends State<IdentityScreen> {
                         validator: (v) {
                           final normalized = _toEnglishDigits(v ?? '');
                           if (normalized.isEmpty) return 'کد ملی الزامی است';
-                          if (normalized.length != 10)
+                          if (normalized.length != 10) {
                             return 'کد ملی باید ۱۰ رقم باشد';
+                          }
                           return null;
                         },
                       ),
@@ -568,8 +570,9 @@ class _IdentityScreenState extends State<IdentityScreen> {
                                 'شماره سریال (حرف انگلیسی + عدد) یا کد رهگیری رسید',
                           ),
                           validator: (v) {
-                            if (v == null || v.isEmpty)
+                            if (v == null || v.isEmpty) {
                               return 'سریال کارت الزامی است';
+                            }
                             if (v.length < 5) return 'سریال معتبر نیست';
                             return null;
                           },

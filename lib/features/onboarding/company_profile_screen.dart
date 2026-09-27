@@ -188,7 +188,11 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
       } else {
         final me = await ApiClient.getJson(AppConstants.meEndpoint);
         if (!mounted) return;
-        context.go(me['onboarding']?['needs_verification_video'] == true ? '/video-verify' : '/dashboard');
+        context.go(
+          me['onboarding']?['needs_verification_video'] == true
+              ? '/video-verify'
+              : '/dashboard',
+        );
       }
     } catch (e) {
       if (!mounted) return;
@@ -360,7 +364,7 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
                       _loadingProvinces
                           ? const LinearProgressIndicator()
                           : DropdownButtonFormField<int>(
-                              value: _provinceId,
+                              initialValue: _provinceId,
                               isExpanded: true,
                               decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.map_outlined),
@@ -390,7 +394,7 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
                       _loadingCities
                           ? const LinearProgressIndicator()
                           : DropdownButtonFormField<int>(
-                              value: _cityId,
+                              initialValue: _cityId,
                               isExpanded: true,
                               decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.location_city_rounded),

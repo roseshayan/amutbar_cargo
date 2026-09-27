@@ -43,7 +43,9 @@ class _FaqScreenState extends State<FaqScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = e is ApiException ? e.message : 'دریافت سوالات متداول انجام نشد.';
+        _error = e is ApiException
+            ? e.message
+            : 'دریافت سوالات متداول انجام نشد.';
       });
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -90,7 +92,11 @@ class _FaqScreenState extends State<FaqScreen> {
                 padding: const EdgeInsets.all(24),
                 children: [
                   const SizedBox(height: 100),
-                  Icon(Icons.cloud_off_rounded, size: 70, color: Colors.grey.shade300),
+                  Icon(
+                    Icons.cloud_off_rounded,
+                    size: 70,
+                    color: Colors.grey.shade300,
+                  ),
                   const SizedBox(height: 18),
                   Text(
                     _error!,
@@ -113,7 +119,11 @@ class _FaqScreenState extends State<FaqScreen> {
                 padding: const EdgeInsets.all(24),
                 children: [
                   const SizedBox(height: 100),
-                  Icon(Icons.question_answer_outlined, size: 72, color: Colors.grey.shade300),
+                  Icon(
+                    Icons.question_answer_outlined,
+                    size: 72,
+                    color: Colors.grey.shade300,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'هنوز سوال متداولی برای این اپلیکیشن ثبت نشده است.',
@@ -126,7 +136,7 @@ class _FaqScreenState extends State<FaqScreen> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(16, 18, 16, 28),
                 itemCount: _categories.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                separatorBuilder: (_, _) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   final item = _categories[index];
                   final questions = item['questions'] is List
@@ -140,13 +150,17 @@ class _FaqScreenState extends State<FaqScreen> {
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => FaqCategoryScreen(
-                            title: (item['title'] ?? 'سوالات متداول').toString(),
+                            title: (item['title'] ?? 'سوالات متداول')
+                                .toString(),
                             questions: questions,
                           ),
                         ),
                       ),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 16,
+                        ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: Colors.grey.shade200),
@@ -157,7 +171,7 @@ class _FaqScreenState extends State<FaqScreen> {
                               width: 46,
                               height: 46,
                               decoration: BoxDecoration(
-                                color: AppTheme.primary.withOpacity(.10),
+                                color: AppTheme.primary.withValues(alpha: 0.10),
                                 borderRadius: BorderRadius.circular(14),
                               ),
                               child: Icon(
@@ -172,22 +186,36 @@ class _FaqScreenState extends State<FaqScreen> {
                                 children: [
                                   Text(
                                     (item['title'] ?? '').toString(),
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
                                   ),
-                                  if ((item['description'] ?? '').toString().trim().isNotEmpty) ...[
+                                  if ((item['description'] ?? '')
+                                      .toString()
+                                      .trim()
+                                      .isNotEmpty) ...[
                                     const SizedBox(height: 4),
                                     Text(
                                       item['description'].toString(),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.grey.shade600, fontSize: 12.5, height: 1.6),
+                                      style: TextStyle(
+                                        color: Colors.grey.shade600,
+                                        fontSize: 12.5,
+                                        height: 1.6,
+                                      ),
                                     ),
                                   ],
                                 ],
                               ),
                             ),
                             const SizedBox(width: 8),
-                            Icon(Icons.chevron_left_rounded, color: Colors.grey.shade600, size: 30),
+                            Icon(
+                              Icons.chevron_left_rounded,
+                              color: Colors.grey.shade600,
+                              size: 30,
+                            ),
                           ],
                         ),
                       ),
@@ -201,7 +229,11 @@ class _FaqScreenState extends State<FaqScreen> {
 }
 
 class FaqCategoryScreen extends StatelessWidget {
-  const FaqCategoryScreen({super.key, required this.title, required this.questions});
+  const FaqCategoryScreen({
+    super.key,
+    required this.title,
+    required this.questions,
+  });
 
   final String title;
   final List<dynamic> questions;
@@ -214,7 +246,7 @@ class FaqCategoryScreen extends StatelessWidget {
       body: ListView.separated(
         padding: const EdgeInsets.fromLTRB(14, 14, 14, 28),
         itemCount: questions.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (context, index) {
           final raw = questions[index];
           if (raw is! Map) return const SizedBox.shrink();
@@ -228,7 +260,10 @@ class FaqCategoryScreen extends StatelessWidget {
                 MaterialPageRoute(builder: (_) => FaqDetailScreen(item: item)),
               ),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 17,
+                ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: Colors.grey.shade200),
@@ -238,11 +273,18 @@ class FaqCategoryScreen extends StatelessWidget {
                     Expanded(
                       child: Text(
                         (item['question'] ?? '').toString(),
-                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, height: 1.6),
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          height: 1.6,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Icon(Icons.chevron_left_rounded, color: Colors.grey.shade600),
+                    Icon(
+                      Icons.chevron_left_rounded,
+                      color: Colors.grey.shade600,
+                    ),
                   ],
                 ),
               ),
@@ -275,7 +317,9 @@ class FaqDetailScreen extends StatelessWidget {
     final rawLink = item['link'];
     final link = rawLink is Map ? Map<String, dynamic>.from(rawLink) : null;
     final linkUrl = link == null ? '' : (link['url'] ?? '').toString();
-    final linkLabel = link == null ? '' : (link['label'] ?? 'مشاهده لینک').toString();
+    final linkLabel = link == null
+        ? ''
+        : (link['label'] ?? 'مشاهده لینک').toString();
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
@@ -285,7 +329,11 @@ class FaqDetailScreen extends StatelessWidget {
         children: [
           Text(
             question,
-            style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold, height: 1.65),
+            style: const TextStyle(
+              fontSize: 21,
+              fontWeight: FontWeight.bold,
+              height: 1.65,
+            ),
           ),
           const SizedBox(height: 20),
           Container(
@@ -299,7 +347,11 @@ class FaqDetailScreen extends StatelessWidget {
             child: SelectableText(
               answer,
               textAlign: TextAlign.justify,
-              style: TextStyle(fontSize: 15, height: 2, color: Colors.grey.shade800),
+              style: TextStyle(
+                fontSize: 15,
+                height: 2,
+                color: Colors.grey.shade800,
+              ),
             ),
           ),
           if (imageUrl.isNotEmpty) ...[
@@ -317,7 +369,7 @@ class FaqDetailScreen extends StatelessWidget {
                         alignment: Alignment.center,
                         child: const CircularProgressIndicator(),
                       ),
-                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                errorBuilder: (_, _, _) => const SizedBox.shrink(),
               ),
             ),
           ],
@@ -332,8 +384,10 @@ class FaqDetailScreen extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppTheme.primary,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  side: BorderSide(color: AppTheme.primary.withOpacity(.45)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  side: BorderSide(color: AppTheme.primary.withValues(alpha: 0.45)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                 ),
               ),
             ),
@@ -341,7 +395,7 @@ class FaqDetailScreen extends StatelessWidget {
           if (videoUrl.isNotEmpty) ...[
             const SizedBox(height: 14),
             Material(
-              color: AppTheme.primary.withOpacity(.08),
+              color: AppTheme.primary.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(16),
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
@@ -353,21 +407,40 @@ class FaqDetailScreen extends StatelessWidget {
                       Container(
                         width: 48,
                         height: 48,
-                        decoration: const BoxDecoration(color: AppTheme.primary, shape: BoxShape.circle),
-                        child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 30),
+                        decoration: const BoxDecoration(
+                          color: AppTheme.primary,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.play_arrow_rounded,
+                          color: Colors.white,
+                          size: 30,
+                        ),
                       ),
                       const SizedBox(width: 14),
                       const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('مشاهده ویدئوی راهنما', style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text(
+                              'مشاهده ویدئوی راهنما',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(height: 3),
-                            Text('ویدئو در پخش‌کننده دستگاه باز می‌شود.', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                            Text(
+                              'ویدئو در پخش‌کننده دستگاه باز می‌شود.',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      const Icon(Icons.open_in_new_rounded, color: AppTheme.primary),
+                      const Icon(
+                        Icons.open_in_new_rounded,
+                        color: AppTheme.primary,
+                      ),
                     ],
                   ),
                 ),

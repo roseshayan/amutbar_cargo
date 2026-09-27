@@ -6,7 +6,10 @@ class TermsAndConditionsScreen extends StatelessWidget {
   const TermsAndConditionsScreen({super.key, required this.termsText});
 
   List<_TermsSection> _parseSections() {
-    final normalized = termsText.trim().replaceAll('\r\n', '\n').replaceAll('\r', '\n');
+    final normalized = termsText
+        .trim()
+        .replaceAll('\r\n', '\n')
+        .replaceAll('\r', '\n');
     if (normalized.isEmpty) {
       return const [
         _TermsSection(
@@ -74,7 +77,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
               width: 72,
               height: 72,
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.1),
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(22),
               ),
               child: Icon(
@@ -91,7 +94,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodySmall?.copyWith(
                   height: 1.7,
-                  color: theme.colorScheme.onSurface.withOpacity(.62),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.62),
                 ),
               ),
             ),
@@ -106,7 +109,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
                   105 + MediaQuery.of(context).padding.bottom,
                 ),
                 itemCount: sections.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                separatorBuilder: (_, _) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   final section = sections[index];
                   return Container(
@@ -114,7 +117,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
                       color: theme.cardColor,
                       borderRadius: BorderRadius.circular(17),
                       border: Border.all(
-                        color: theme.dividerColor.withOpacity(.11),
+                        color: theme.dividerColor.withValues(alpha: 0.11),
                       ),
                     ),
                     child: Theme(
@@ -136,7 +139,9 @@ class TermsAndConditionsScreen extends StatelessWidget {
                           height: 36,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(.09),
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.09,
+                            ),
                             borderRadius: BorderRadius.circular(11),
                           ),
                           child: Text(
@@ -166,7 +171,9 @@ class TermsAndConditionsScreen extends StatelessWidget {
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 fontSize: 13.5,
                                 height: 1.95,
-                                color: theme.colorScheme.onSurface.withOpacity(.76),
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.76,
+                                ),
                               ),
                             ),
                           ),

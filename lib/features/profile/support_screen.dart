@@ -123,8 +123,9 @@ class _SupportScreenState extends State<SupportScreen> {
                         ? null
                         : () async {
                             if (subjectCtrl.text.isEmpty ||
-                                msgCtrl.text.isEmpty)
+                                msgCtrl.text.isEmpty) {
                               return;
+                            }
                             setModalState(() => isSaving = true);
                             try {
                               await ApiClient.postJson(
@@ -188,9 +189,9 @@ class _SupportScreenState extends State<SupportScreen> {
               borderRadius: BorderRadius.circular(16),
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const FaqScreen()),
-                ),
+                onTap: () => Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => const FaqScreen())),
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
@@ -204,7 +205,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: AppTheme.primary.withOpacity(.10),
+                          color: AppTheme.primary.withValues(alpha: 0.10),
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: const Icon(
@@ -345,7 +346,7 @@ class _SupportScreenState extends State<SupportScreen> {
                       vertical: 8,
                     ),
                     itemCount: _tickets.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    separatorBuilder: (_, _) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final t = _tickets[index];
                       final int status =

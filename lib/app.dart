@@ -23,8 +23,8 @@ class AmutBarCargoApp extends StatelessWidget {
     final router = GoRouter(
       initialLocation: '/splash',
       routes: [
-        GoRoute(path: '/splash', builder: (_, __) => const SplashScreen()),
-        GoRoute(path: '/auth', builder: (_, __) => const AuthScreen()),
+        GoRoute(path: '/splash', builder: (_, _) => const SplashScreen()),
+        GoRoute(path: '/auth', builder: (_, _) => const AuthScreen()),
         GoRoute(
           path: '/otp',
           builder: (_, state) {
@@ -33,19 +33,22 @@ class AmutBarCargoApp extends StatelessWidget {
           },
         ),
         // احراز هویت صاحب بار (شاهکار - مثل رانندگان)
-        GoRoute(path: '/identity', builder: (_, __) => const IdentityScreen()),
+        GoRoute(path: '/identity', builder: (_, _) => const IdentityScreen()),
         // تکمیل پروفایل باربری/صاحب بار (جایگزین مرحله‌ی اطلاعات خودرو در اپ راننده)
         GoRoute(
           path: '/company-profile',
-          builder: (_, __) => const CompanyProfileScreen(),
+          builder: (_, _) => const CompanyProfileScreen(),
         ),
-        GoRoute(path: '/video-verify', builder: (_, __) => const VideoVerificationScreen()),
-        GoRoute(path: '/dashboard', builder: (_, __) => const MainScreen()),
+        GoRoute(
+          path: '/video-verify',
+          builder: (_, _) => const VideoVerificationScreen(),
+        ),
+        GoRoute(path: '/dashboard', builder: (_, _) => const MainScreen()),
         GoRoute(
           path: '/create-load',
-          builder: (_, __) => const CreateLoadScreen(),
+          builder: (_, _) => const CreateLoadScreen(),
         ),
-        GoRoute(path: '/support', builder: (_, __) => const SupportScreen()),
+        GoRoute(path: '/support', builder: (_, _) => const SupportScreen()),
         GoRoute(
           path: '/ticket-chat',
           builder: (_, state) {
@@ -55,7 +58,7 @@ class AmutBarCargoApp extends StatelessWidget {
         ),
         GoRoute(
           path: '/identity-info',
-          builder: (_, __) => const IdentityInfoScreen(),
+          builder: (_, _) => const IdentityInfoScreen(),
         ),
       ],
     );

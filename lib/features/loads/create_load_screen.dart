@@ -86,12 +86,15 @@ class _CreateLoadScreenState extends State<CreateLoadScreen> {
 
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    if (_originCityId == null)
+    if (_originCityId == null) {
       return _toast('شهر مبدا را انتخاب کنید', Colors.red);
-    if (_destCityId == null)
+    }
+    if (_destCityId == null) {
       return _toast('شهر مقصد را انتخاب کنید', Colors.red);
-    if (_cargoTypeId == null)
+    }
+    if (_cargoTypeId == null) {
       return _toast('نوع کالا را انتخاب کنید', Colors.red);
+    }
     if (_vehicleTypeId == null) {
       return _toast('نوع بارگیر را انتخاب کنید', Colors.red);
     }
@@ -280,7 +283,7 @@ class _CreateLoadScreenState extends State<CreateLoadScreen> {
             _loadingVehicles
                 ? const LinearProgressIndicator()
                 : DropdownButtonFormField<int>(
-                    value: _vehicleTypeId,
+                    initialValue: _vehicleTypeId,
                     isExpanded: true,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.local_shipping_outlined),
@@ -418,7 +421,7 @@ class _CreateLoadScreenState extends State<CreateLoadScreen> {
                 'نیاز به صدور بیمه‌نامه و بارنامه رسمی',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
-              activeColor: AppTheme.primary,
+              activeThumbColor: AppTheme.primary,
             ),
             if (_hasInsurance)
               TextFormField(
@@ -702,7 +705,7 @@ class _SearchSheetState extends State<_SearchSheet> {
                     )
                   : ListView.separated(
                       itemCount: _results.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      separatorBuilder: (_, _) => const Divider(height: 1),
                       itemBuilder: (_, i) {
                         final r = _results[i];
                         return ListTile(

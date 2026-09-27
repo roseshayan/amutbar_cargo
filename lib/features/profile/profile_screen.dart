@@ -484,8 +484,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: ElevatedButton.icon(
                         onPressed: () {
                           final phone = AppInfoCache.supportPhone;
-                          if (phone.isNotEmpty)
+                          if (phone.isNotEmpty) {
                             launchUrl(Uri.parse('tel:$phone'));
+                          }
                         },
                         icon: const Icon(Icons.support_agent_rounded, size: 20),
                         label: const Text('تماس با پشتیبانی'),

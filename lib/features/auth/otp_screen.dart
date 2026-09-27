@@ -150,7 +150,8 @@ class _OtpScreenState extends State<OtpScreen> {
 
         if (!isIdentityVerified) {
           context.go('/identity');
-        } else if (res['profile']?['onboarding']?['needs_verification_video'] == true) {
+        } else if (res['profile']?['onboarding']?['needs_verification_video'] ==
+            true) {
           context.go('/video-verify');
         } else {
           context.go('/dashboard');
@@ -283,8 +284,9 @@ class _OtpScreenState extends State<OtpScreen> {
                   hintStyle: TextStyle(color: Colors.grey.shade300),
                 ),
                 onChanged: (val) {
-                  if (val.length >= 6)
-                    _verify(); // تغییر به ۴ یا ۶ بسته به نیاز
+                  if (val.length >= 6) {
+                    _verify();
+                  } // تغییر به ۴ یا ۶ بسته به نیاز
                 },
               ),
               const SizedBox(height: 24),

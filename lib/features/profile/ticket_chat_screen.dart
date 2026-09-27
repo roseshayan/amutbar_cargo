@@ -460,7 +460,7 @@ class _TicketChatScreenState extends State<TicketChatScreen> {
                           attachmentUrl,
                           fit: BoxFit.cover,
                           width: 200,
-                          errorBuilder: (_, __, ___) =>
+                          errorBuilder: (_, _, _) =>
                               const Icon(Icons.broken_image, size: 60),
                         ),
                       ),
